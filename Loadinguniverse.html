@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Loading Spinner Collection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated circuit background */
+        .circuit-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.1), transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.05), transparent),
+                radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.1), transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.05), transparent);
+            background-size: 200px 100px;
+            animation: circuitMove 10s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes circuitMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-200px, -100px); }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .title {
+            color: white;
+            font-size: 4rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 3rem;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+            animation: titleShimmer 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleShimmer {
+            from { 
+                text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+                color: #fff;
+            }
+            to { 
+                text-shadow: 0 0 50px rgba(102, 126, 234, 1), 0 0 80px rgba(118, 75, 162, 0.8);
+                color: #667eea;
+            }
+        }
+
+        .spinner-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        .spinner-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spinner-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: cardShine 3s infinite;
+        }
+
+        @keyframes cardShine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .spinner-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .spinner-title {
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        /* Spinner 1: Quantum Rings */
+        .quantum-spinner {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .quantum-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top-color: #00ffff;
+            animation: quantumSpin 2s linear infinite;
+        }
+
+        .quantum-ring:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            animation-delay: 0s;
+            border-top-color: #00ffff;
+        }
+
+        .quantum-ring:nth-child(2) {
+            width: 80px;
+            height: 80px;
+            top: 10px;
+            left: 10px;
+            animation-delay: -0.5s;
+            animation-direction: reverse;
+            border-top-color: #ff0080;
+        }
+
+        .quantum-ring:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            top: 20px;
+            left: 20px;
+            animation-delay: -1s;
+            border-top-color: #ffff00;
+        }
+
+        @keyframes quantumSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Spinner 2: DNA Helix */
+        .dna-spinner {
+            position: relative;
+            width: 80px;
+            height: 120px;
+        }
+
+        .dna-strand {
+            position: absolute;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(0deg, #ff0080, #00ffff, #ff0080);
+            border-radius: 2px;
+            animation: dnaRotate 3s linear infinite;
+        }
+
+        .dna-strand:nth-child(1) {
+            left: 20px;
+            animation-delay: 0s;
+        }
+
+        .dna-strand:nth-child(2) {
+            right: 20px;
+            animation-delay: -1.5s;
+        }
+
+        .dna-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: dnaDot 3s linear infinite;
+        }
+
+        @keyframes dnaRotate {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        @keyframes dnaDot {
+            0% { 
+                top: 0%;
+                left: 36px;
+                opacity: 1;
+            }
+            25% { 
+                top: 25%;
+                left: 20px;
+                opacity: 0.7;
+            }
+            50% { 
+                top: 50%;
+                left: 36px;
+                opacity: 1;
+            }
+            75% { 
+                top: 75%;
+                left: 52px;
+                opacity: 0.7;
+            }
+            100% { 
+                top: 100%;
+                left: 36px;
+                opacity: 1;
+            }
+        }
+
+        /* Spinner 3: Atomic Loader */
+        .atomic-spinner {
+            position: relative;
+            width: 120px;
+            height: 120px;
+        }
+
+        .nucleus {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #fff, #00ffff);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 20px #00ffff;
+            animation: nucleusPulse 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes nucleusPulse {
+            from { transform: translate(-50%, -50%) scale(1); }
+            to { transform: translate(-50%, -50%) scale(1.3); }
+        }
+
+        .electron-orbit {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .orbit-1 {
+            width: 60px;
+            height: 60px;
+            animation: electronOrbit1 2s linear infinite;
+        }
+
+        .orbit-2 {
+            width: 90px;
+            height: 90px;
+            animation: electronOrbit2 3s linear infinite;
+        }
+
+        .orbit-3 {
+            width: 120px;
+            height: 120px;
+            animation: electronOrbit3 4s linear infinite reverse;
+        }
+
+        .electron {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #ff0080;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ff0080;
+        }
+
+        .electron-1 {
+            top: -3px;
+            left: 50%;
+            margin-left: -3px;
+        }
+
+        .electron-2 {
+            top: -3px;
+            left: 50%;
+            margin-left: -3px;
+        }
+
+        .electron-3 {
+            top: -3px;
+            left: 50%;
+            margin-left: -3px;
+        }
+
+        @keyframes electronOrbit1 {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes electronOrbit2 {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes electronOrbit3 {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Spinner 4: Matrix Rain */
+        .matrix-spinner {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .matrix-column {
+            position: absolute;
+            width: 10px;
+            height: 100%;
+            color: #00ff00;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+            animation: matrixRain 2s linear infinite;
+        }
+
+        .matrix-column:nth-child(1) { left: 10px; animation-delay: 0s; }
+        .matrix-column:nth-child(2) { left: 25px; animation-delay: -0.5s; }
+        .matrix-column:nth-child(3) { left: 40px; animation-delay: -1s; }
+        .matrix-column:nth-child(4) { left: 55px; animation-delay: -1.5s; }
+        .matrix-column:nth-child(5) { left: 70px; animation-delay: -0.3s; }
+
+        @keyframes matrixRain {
+            0% { transform: translateY(-100%); opacity: 1; }
+            100% { transform: translateY(100%); opacity: 0; }
+        }
+
+        /* Spinner 5: Gear System */
+        .gear-system {
+            position: relative;
+            width: 120px;
+            height: 100px;
+        }
+
+        .gear {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #333, #666);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gear::before {
+            content: '';
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            background: #444;
+        }
+
+        .gear-large {
+            width: 60px;
+            height: 60px;
+            left: 0;
+            top: 20px;
+            animation: gearRotate 3s linear infinite;
+        }
+
+        .gear-medium {
+            width: 40px;
+            height: 40px;
+            right: 20px;
+            top: 10px;
+            animation: gearRotate 2s linear infinite reverse;
+        }
+
+        .gear-small {
+            width: 30px;
+            height: 30px;
+            right: 0;
+            bottom: 10px;
+            animation: gearRotate 1.5s linear infinite;
+        }
+
+        @keyframes gearRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Spinner 6: Holographic Cube */
+        .holo-cube-container {
+            perspective: 200px;
+            width: 100px;
+            height: 100px;
+        }
+
+        .holo-cube {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: cubeRotate 4s linear infinite;
+            margin: 20px auto;
+        }
+
+        .cube-face {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 255, 255, 0.3);
+            border: 1px solid #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        .front { transform: rotateY(0deg) translateZ(30px); }
+        .back { transform: rotateY(180deg) translateZ(30px); }
+        .right { transform: rotateY(90deg) translateZ(30px); }
+        .left { transform: rotateY(-90deg) translateZ(30px); }
+        .top { transform: rotateX(90deg) translateZ(30px); }
+        .bottom { transform: rotateX(-90deg) translateZ(30px); }
+
+        @keyframes cubeRotate {
+            0% { transform: rotateX(0deg) rotateY(0deg); }
+            100% { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        /* Progress indicators */
+        .progress-ring {
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+        }
+
+        .progress-circle {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .progress-path {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.2);
+            stroke-width: 2;
+        }
+
+        .progress-bar {
+            fill: none;
+            stroke: #00ffff;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-dasharray: 113;
+            stroke-dashoffset: 113;
+            animation: progressFill 3s ease-in-out infinite;
+        }
+
+        @keyframes progressFill {
+            0% { stroke-dashoffset: 113; }
+            50% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: 113; }
+        }
+
+        /* Floating particles */
+        .particle-system {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .floating-particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            animation: floatUp 4s linear infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes floatUp {
+            0% { 
+                transform: translateY(0) scale(1);
+                opacity: 0;
+            }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { 
+                transform: translateY(-200px) scale(0);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="circuit-bg"></div>
+    <div class="particle-system"></div>
+    
+    <div class="container">
+        <h1 class="title">Loading Universe</h1>
+        
+        <div class="spinner-grid">
+            <!-- Quantum Rings Spinner -->
+            <div class="spinner-card">
+                <h3 class="spinner-title">Quantum Rings</h3>
+                <div class="quantum-spinner">
+                    <div class="quantum-ring"></div>
+                    <div class="quantum-ring"></div>
+                    <div class="quantum-ring"></div>
+                </div>
+                <div class="progress-ring">
+                    <svg class="progress-circle" viewBox="0 0 36 36">
+                        <path class="progress-path" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                        <path class="progress-bar" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- DNA Helix Spinner -->
+            <div class="spinner-card">
+                <h3 class="spinner-title">DNA Helix</h3>
+                <div class="dna-spinner">
+                    <div class="dna-strand"></div>
+                    <div class="dna-strand"></div>
+                    <div class="dna-dot" style="animation-delay: 0s;"></div>
+                    <div class="dna-dot" style="animation-delay: -0.5s;"></div>
+                    <div class="dna-dot" style="animation-delay: -1s;"></div>
+                    <div class="dna-dot" style="animation-delay: -1.5s;"></div>
+                </div>
+                <div class="progress-ring">
+                    <svg class="progress-circle" viewBox="0 0 36 36">
+                        <path class="progress-path" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                        <path class="progress-bar" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" style="animation-delay: -0.5s;"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Atomic Loader -->
+            <div class="spinner-card">
+                <h3 class="spinner-title">Atomic Structure</h3>
+                <div class="atomic-spinner">
+                    <div class="nucleus"></div>
+                    <div class="electron-orbit orbit-1">
+                        <div class="electron electron-1"></div>
+                    </div>
+                    <div class="electron-orbit orbit-2">
+                        <div class="electron electron-2"></div>
+                    </div>
+                    <div class="electron-orbit orbit-3">
+                        <div class="electron electron-3"></div>
+                    </div>
+                </div>
+                <div class="progress-ring">
+                    <svg class="progress-circle" viewBox="0 0 36 36">
+                        <path class="progress-path" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                        <path class="progress-bar" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" style="animation-delay: -1s;"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Matrix Rain -->
+            <div class="spinner-card">
+                <h3 class="spinner-title">Matrix Code</h3>
+                <div class="matrix-spinner">
+                    <div class="matrix-column">1<br>0<br>1<br>1<br>0</div>
+                    <div class="matrix-column">0<br>1<br>0<br>1<br>1</div>
+                    <div class="matrix-column">1<br>1<br>0<br>0<br>1</div>
+                    <div class="matrix-column">0<br>0<br>1<br>1<br>0</div>
+                    <div class="matrix-column">1<br>0<br>1<br>0<br>1</div>
+                </div>
+                <div class="progress-ring">
+                    <svg class="progress-circle" viewBox="0 0 36 36">
+                        <path class="progress-path" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                        <path class="progress-bar" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" style="animation-delay: -1.5s;"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Gear System -->
+            <div class="spinner-card">
+                <h3 class="spinner-title">Mechanical Gears</h3>
+                <div class="gear-system">
+                    <div class="gear gear-large"></div>
+                    <div class="gear gear-medium"></div>
+                    <div class="gear gear-small"></div>
+                </div>
+                <div class="progress-ring">
+                    <svg class="progress-circle" viewBox="0 0 36 36">
+                        <path class="progress-path" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                        <path class="progress-bar" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" style="animation-delay: -2s;"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Holographic Cube -->
+            <div class="spinner-card">
+                <h3 class="spinner-title">Holographic Cube</h3>
+                <div class="holo-cube-container">
+                    <div class="holo-cube">
+                        <div class="cube-face front"></div>
+                        <div class="cube-face back"></div>
+                        <div class="cube-face right"></div>
+                        <div class="cube-face left"></div>
+                        <div class="cube-face top"></div>
+                        <div class="cube-face bottom"></div>
+                    </div>
+                </div>
+                <div class="progress-ring">
+                    <svg class="progress-circle" viewBox="0 0 36 36">
+                        <path class="progress-path" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                        <path class="progress-bar" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" style="animation-delay: -2.5s;"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Generate floating particles
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'floating-particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 2 + 's';
+            particle.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            
+            document.querySelector('.particle-system').appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 5000);
+        }
+
+        // Generate particles continuously
+        setInterval(createParticle, 300);
+
+        // Interactive hover effects for spinner cards
+        const spinnerCards = document.querySelectorAll('.spinner-card');
+        
+        spinnerCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                const spinners = card.querySelectorAll('[class*="spinner"], [class*="system"], [class*="container"]');
+                spinners.forEach(spinner => {
+                    spinner.style.animationDuration = '0.5s';
+                });
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                const spinners = card.querySelectorAll('[class*="spinner"], [class*="system"], [class*="container"]');
+                spinners.forEach(spinner => {
+                    spinner.style.animationDuration = '';
+                });
+            });
+        });
+
+        // Click to speed up animation
+        document.addEventListener('click', (e) => {
+            const card = e.target.closest('.spinner-card');
+            if (card) {
+                const allAnimated = card.querySelectorAll('*');
+                allAnimated.forEach(element => {
+                    const computedStyle = window.getComputedStyle(element);
+                    if (computedStyle.animationName !== 'none') {
+                        element.style.animationDuration = '0.3s';
+                        setTimeout(() => {
+                            element.style.animationDuration = '';
+                        }, 2000);
+                    }
+                });
+            }
+        });
+
+        // Matrix rain random characters
+        const matrixColumns = document.querySelectorAll('.matrix-column');
+        const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZあいうえおかきくけこ';
+        
+        function updateMatrixChars() {
+            matrixColumns.forEach(column => {
+                let content = '';
+                for (let i = 0; i < 5; i++) {
+                    content += chars[Math.floor(Math.random() * chars.length)] + '<br>';
+                }
+                column.innerHTML = content;
+            });
+        }
+        
+        setInterval(updateMatrixChars, 100);
+
+        // Dynamic progress ring updates
+        const progressBars = document.querySelectorAll('.progress-bar');
+        let progressPhase = 0;
+        
+        function updateProgress() {
+            progressPhase += 0.02;
+            progressBars.forEach((bar, index) => {
+                const offset = 113 * (1 - (Math.sin(progressPhase + index * 0.5) + 1) / 2);
+                bar.style.strokeDashoffset = offset;
+            });
+            requestAnimationFrame(updateProgress);
+        }
+        updateProgress();
+
+        // Add random color changes to various elements
+        function randomizeColors() {
+            const colors = ['#00ffff', '#ff0080', '#ffff00', '#00ff00', '#ff6600', '#9900ff'];
+            
+            // Change quantum ring colors
+            const quantumRings = document.querySelectorAll('.quantum-ring');
+            quantumRings.forEach(ring => {
+                ring.style.borderTopColor = colors[Math.floor(Math.random() * colors.length)];
+            });
+            
+            // Change progress bar colors
+            progressBars.forEach(bar => {
+                bar.style.stroke = colors[Math.floor(Math.random() * colors.length)];
+            });
+        }
+        
+        setInterval(randomizeColors, 3000);
+
+        // Breathing effect for the entire container
+        const container = document.querySelector('.container');
+        let breathPhase = 0;
+        
+        function breathingEffect() {
+            breathPhase += 0.01;
+            const scale = 1 + Math.sin(breathPhase) * 0.02;
+            container.style.transform = `scale(${scale})`;
+            requestAnimationFrame(breathingEffect);
+        }
+        breathingEffect();
+    </script>
+</body>
+</html>

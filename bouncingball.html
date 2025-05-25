@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Bouncing Balls Physics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(ellipse at top, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            position: relative;
+        }
+
+        /* Animated floor grid */
+        .floor-grid {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background-image: 
+                linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(0deg, rgba(0, 255, 255, 0.3) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridPulse 3s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        @keyframes gridPulse {
+            from { opacity: 0.3; }
+            to { opacity: 0.8; }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .title {
+            color: #00ffff;
+            font-size: 4.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 2rem;
+            text-shadow: 
+                0 0 20px #00ffff,
+                0 0 40px #00ffff,
+                0 0 80px #00ffff;
+            animation: titleBounce 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleBounce {
+            from { 
+                transform: translateY(0);
+                text-shadow: 
+                    0 0 20px #00ffff,
+                    0 0 40px #00ffff,
+                    0 0 80px #00ffff;
+            }
+            to { 
+                transform: translateY(-10px);
+                text-shadow: 
+                    0 0 30px #ff0080,
+                    0 0 60px #ff0080,
+                    0 0 120px #ff0080;
+            }
+        }
+
+        .physics-playground {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            height: 600px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        /* Classic Bouncing Balls */
+        .classic-bounce-area {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 300px;
+            height: 200px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .classic-ball {
+            position: absolute;
+            border-radius: 50%;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+            bottom: 0;
+        }
+
+        .ball-1 {
+            width: 20px;
+            height: 20px;
+            left: 50px;
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, #c44569);
+            animation: classicBounce1 1.2s infinite;
+            box-shadow: 0 0 20px #ff6b6b;
+        }
+
+        .ball-2 {
+            width: 25px;
+            height: 25px;
+            left: 100px;
+            background: radial-gradient(circle at 30% 30%, #4ecdc4, #26a69a);
+            animation: classicBounce2 1.5s infinite;
+            animation-delay: -0.3s;
+            box-shadow: 0 0 20px #4ecdc4;
+        }
+
+        .ball-3 {
+            width: 30px;
+            height: 30px;
+            left: 150px;
+            background: radial-gradient(circle at 30% 30%, #45b7d1, #2980b9);
+            animation: classicBounce3 1.8s infinite;
+            animation-delay: -0.6s;
+            box-shadow: 0 0 20px #45b7d1;
+        }
+
+        .ball-4 {
+            width: 22px;
+            height: 22px;
+            left: 200px;
+            background: radial-gradient(circle at 30% 30%, #feca57, #f39c12);
+            animation: classicBounce4 1.3s infinite;
+            animation-delay: -0.9s;
+            box-shadow: 0 0 20px #feca57;
+        }
+
+        @keyframes classicBounce1 {
+            0%, 100% { transform: translateY(0) scale(1, 1); }
+            50% { transform: translateY(-100px) scale(1.1, 0.9); }
+        }
+
+        @keyframes classicBounce2 {
+            0%, 100% { transform: translateY(0) scale(1, 1); }
+            50% { transform: translateY(-120px) scale(1.2, 0.8); }
+        }
+
+        @keyframes classicBounce3 {
+            0%, 100% { transform: translateY(0) scale(1, 1); }
+            50% { transform: translateY(-140px) scale(1.3, 0.7); }
+        }
+
+        @keyframes classicBounce4 {
+            0%, 100% { transform: translateY(0) scale(1, 1); }
+            50% { transform: translateY(-110px) scale(1.15, 0.85); }
+        }
+
+        /* Gravity Balls */
+        .gravity-area {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 300px;
+            height: 200px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .gravity-ball {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #fff, #ddd);
+            box-shadow: 0 0 30px currentColor;
+        }
+
+        .gravity-1 {
+            width: 15px;
+            height: 15px;
+            left: 50px;
+            color: #e74c3c;
+            animation: gravityBounce 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+        }
+
+        .gravity-2 {
+            width: 20px;
+            height: 20px;
+            left: 100px;
+            color: #3498db;
+            animation: gravityBounce 2.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+            animation-delay: -0.4s;
+        }
+
+        .gravity-3 {
+            width: 18px;
+            height: 18px;
+            left: 150px;
+            color: #2ecc71;
+            animation: gravityBounce 2.1s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+            animation-delay: -0.8s;
+        }
+
+        .gravity-4 {
+            width: 25px;
+            height: 25px;
+            left: 200px;
+            color: #f39c12;
+            animation: gravityBounce 2.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+            animation-delay: -1.2s;
+        }
+
+        @keyframes gravityBounce {
+            0% { 
+                transform: translateY(175px) scaleY(0.8);
+                animation-timing-function: ease-out;
+            }
+            10% {
+                transform: translateY(175px) scaleY(1);
+            }
+            50% { 
+                transform: translateY(0px) scaleY(1);
+                animation-timing-function: ease-in;
+            }
+            55% {
+                transform: translateY(0px) scaleY(1.1);
+            }
+            100% { 
+                transform: translateY(175px) scaleY(0.8);
+            }
+        }
+
+        /* DNA Bounce */
+        .dna-area {
+            position: absolute;
+            bottom: 250px;
+            left: 20px;
+            width: 300px;
+            height: 200px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .dna-ball {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #9b59b6, #8e44ad);
+            box-shadow: 0 0 25px #9b59b6;
+            animation: dnaBounce 4s ease-in-out infinite;
+        }
+
+        .dna-1 { left: 50px; animation-delay: 0s; }
+        .dna-2 { left: 80px; animation-delay: -0.5s; }
+        .dna-3 { left: 110px; animation-delay: -1s; }
+        .dna-4 { left: 140px; animation-delay: -1.5s; }
+        .dna-5 { left: 170px; animation-delay: -2s; }
+        .dna-6 { left: 200px; animation-delay: -2.5s; }
+
+        @keyframes dnaBounce {
+            0%, 100% { 
+                transform: translateY(180px) translateX(0) rotateY(0deg);
+            }
+            25% { 
+                transform: translateY(90px) translateX(20px) rotateY(90deg);
+            }
+            50% { 
+                transform: translateY(0px) translateX(0) rotateY(180deg);
+            }
+            75% { 
+                transform: translateY(90px) translateX(-20px) rotateY(270deg);
+            }
+        }
+
+        /* Chain Reaction Balls */
+        .chain-area {
+            position: absolute;
+            bottom: 250px;
+            right: 20px;
+            width: 300px;
+            height: 200px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .chain-ball {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #1abc9c, #16a085);
+            box-shadow: 0 0 30px #1abc9c;
+            bottom: 0;
+        }
+
+        .chain-1 {
+            left: 50px;
+            animation: chainReaction1 3s ease-in-out infinite;
+        }
+
+        .chain-2 {
+            left: 100px;
+            animation: chainReaction2 3s ease-in-out infinite;
+        }
+
+        .chain-3 {
+            left: 150px;
+            animation: chainReaction3 3s ease-in-out infinite;
+        }
+
+        .chain-4 {
+            left: 200px;
+            animation: chainReaction4 3s ease-in-out infinite;
+        }
+
+        @keyframes chainReaction1 {
+            0%, 70%, 100% { transform: translateY(0) scale(1); }
+            10%, 60% { transform: translateY(-150px) scale(1.2); }
+        }
+
+        @keyframes chainReaction2 {
+            0%, 80%, 100% { transform: translateY(0) scale(1); }
+            20%, 70% { transform: translateY(-130px) scale(1.1); }
+        }
+
+        @keyframes chainReaction3 {
+            0%, 90%, 100% { transform: translateY(0) scale(1); }
+            30%, 80% { transform: translateY(-140px) scale(1.15); }
+        }
+
+        @keyframes chainReaction4 {
+            0%, 100% { transform: translateY(0) scale(1); }
+            40%, 90% { transform: translateY(-120px) scale(1.05); }
+        }
+
+        /* Quantum Balls */
+        .quantum-area {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 180px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .quantum-ball {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #fff, transparent);
+            border: 2px solid;
+            box-shadow: 0 0 40px currentColor, inset 0 0 20px currentColor;
+            animation: quantumBounce 2.5s ease-in-out infinite;
+        }
+
+        .quantum-1 {
+            left: 50px;
+            color: #ff0080;
+            animation-delay: 0s;
+        }
+
+        .quantum-2 {
+            left: 120px;
+            color: #00ffff;
+            animation-delay: -0.5s;
+        }
+
+        .quantum-3 {
+            left: 190px;
+            color: #ffff00;
+            animation-delay: -1s;
+        }
+
+        .quantum-4 {
+            left: 260px;
+            color: #ff0080;
+            animation-delay: -1.5s;
+        }
+
+        .quantum-5 {
+            left: 330px;
+            color: #00ffff;
+            animation-delay: -2s;
+        }
+
+        @keyframes quantumBounce {
+            0%, 100% { 
+                transform: translateY(150px) scale(1) rotateZ(0deg);
+                opacity: 1;
+            }
+            25% {
+                transform: translateY(75px) scale(1.2) rotateZ(90deg);
+                opacity: 0.7;
+            }
+            50% { 
+                transform: translateY(0px) scale(0.8) rotateZ(180deg);
+                opacity: 1;
+            }
+            75% {
+                transform: translateY(75px) scale(1.2) rotateZ(270deg);
+                opacity: 0.7;
+            }
+        }
+
+        /* Interactive Controls */
+        .controls {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .control-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(0, 255, 255, 0.2);
+            color: #00ffff;
+            border: 1px solid #00ffff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .control-btn:hover {
+            background: rgba(0, 255, 255, 0.4);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        .control-btn.active {
+            background: #00ffff;
+            color: #000;
+        }
+
+        /* Labels */
+        .area-label {
+            position: absolute;
+            top: -25px;
+            left: 10px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        /* Impact effects */
+        .impact-effect {
+            position: absolute;
+            pointer-events: none;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent);
+            animation: impactRipple 0.5s ease-out forwards;
+        }
+
+        @keyframes impactRipple {
+            0% {
+                width: 10px;
+                height: 10px;
+                opacity: 1;
+            }
+            100% {
+                width: 60px;
+                height: 60px;
+                opacity: 0;
+            }
+        }
+
+        /* Particle trails */
+        .particle-trail {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: trailFade 1s ease-out forwards;
+        }
+
+        @keyframes trailFade {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0); }
+        }
+
+        /* Performance stats */
+        .stats {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            color: #00ffff;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="floor-grid"></div>
+    
+    <div class="container">
+        <h1 class="title">Bouncing Physics Lab</h1>
+        
+        <div class="physics-playground">
+            <!-- Interactive Controls -->
+            <div class="controls">
+                <button class="control-btn active" data-speed="1">Normal</button>
+                <button class="control-btn" data-speed="0.5">Slow</button>
+                <button class="control-btn" data-speed="2">Fast</button>
+                <button class="control-btn" id="pauseBtn">Pause</button>
+                <button class="control-btn" id="gravityBtn">Low Gravity</button>
+            </div>
+            
+            <!-- Classic Bouncing Balls -->
+            <div class="classic-bounce-area">
+                <div class="area-label">Classic Bounce</div>
+                <div class="classic-ball ball-1"></div>
+                <div class="classic-ball ball-2"></div>
+                <div class="classic-ball ball-3"></div>
+                <div class="classic-ball ball-4"></div>
+            </div>
+            
+            <!-- Gravity Balls -->
+            <div class="gravity-area">
+                <div class="area-label">Realistic Gravity</div>
+                <div class="gravity-ball gravity-1"></div>
+                <div class="gravity-ball gravity-2"></div>
+                <div class="gravity-ball gravity-3"></div>
+                <div class="gravity-ball gravity-4"></div>
+            </div>
+            
+            <!-- DNA Bounce -->
+            <div class="dna-area">
+                <div class="area-label">DNA Helix Bounce</div>
+                <div class="dna-ball dna-1"></div>
+                <div class="dna-ball dna-2"></div>
+                <div class="dna-ball dna-3"></div>
+                <div class="dna-ball dna-4"></div>
+                <div class="dna-ball dna-5"></div>
+                <div class="dna-ball dna-6"></div>
+            </div>
+            
+            <!-- Chain Reaction -->
+            <div class="chain-area">
+                <div class="area-label">Chain Reaction</div>
+                <div class="chain-ball chain-1"></div>
+                <div class="chain-ball chain-2"></div>
+                <div class="chain-ball chain-3"></div>
+                <div class="chain-ball chain-4"></div>
+            </div>
+            
+            <!-- Quantum Balls -->
+            <div class="quantum-area">
+                <div class="area-label">Quantum Bounce</div>
+                <div class="quantum-ball quantum-1"></div>
+                <div class="quantum-ball quantum-2"></div>
+                <div class="quantum-ball quantum-3"></div>
+                <div class="quantum-ball quantum-4"></div>
+                <div class="quantum-ball quantum-5"></div>
+            </div>
+            
+            <!-- Performance Stats -->
+            <div class="stats">
+                <div>FPS: <span id="fps">60</span></div>
+                <div>Balls: <span id="ballCount">24</span></div>
+                <div>Physics: <span id="physicsMode">Normal</span></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isPaused = false;
+        let currentSpeed = 1;
+        let lowGravity = false;
+        let animationId;
+
+        // Control buttons
+        const speedButtons = document.querySelectorAll('[data-speed]');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const gravityBtn = document.getElementById('gravityBtn');
+
+        speedButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                speedButtons.forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentSpeed = parseFloat(e.target.dataset.speed);
+                updateAnimationSpeeds();
+            });
+        });
+
+        pauseBtn.addEventListener('click', () => {
+            isPaused = !isPaused;
+            pauseBtn.textContent = isPaused ? 'Resume' : 'Pause';
+            pauseBtn.classList.toggle('active', isPaused);
+            
+            const allBalls = document.querySelectorAll('[class*="ball"]');
+            allBalls.forEach(ball => {
+                ball.style.animationPlayState = isPaused ? 'paused' : 'running';
+            });
+        });
+
+        gravityBtn.addEventListener('click', () => {
+            lowGravity = !lowGravity;
+            gravityBtn.textContent = lowGravity ? 'Normal Gravity' : 'Low Gravity';
+            gravityBtn.classList.toggle('active', lowGravity);
+            updateGravityMode();
+            document.getElementById('physicsMode').textContent = lowGravity ? 'Low Gravity' : 'Normal';
+        });
+
+        function updateAnimationSpeeds() {
+            const allBalls = document.querySelectorAll('[class*="ball"]');
+            allBalls.forEach(ball => {
+                const currentDuration = parseFloat(window.getComputedStyle(ball).animationDuration);
+                ball.style.animationDuration = (currentDuration / currentSpeed) + 's';
+            });
+        }
+
+        function updateGravityMode() {
+            const gravityBalls = document.querySelectorAll('.gravity-ball');
+            const quantumBalls = document.querySelectorAll('.quantum-ball');
+            
+            if (lowGravity) {
+                gravityBalls.forEach(ball => {
+                    ball.style.animationDuration = '4s';
+                    ball.style.animationTimingFunction = 'ease-out';
+                });
+                quantumBalls.forEach(ball => {
+                    ball.style.animationDuration = '5s';
+                });
+            } else {
+                gravityBalls.forEach(ball => {
+                    ball.style.animationDuration = '';
+                    ball.style.animationTimingFunction = '';
+                });
+                quantumBalls.forEach(ball => {
+                    ball.style.animationDuration = '';
+                });
+            }
+        }
+
+        // Impact effects when balls hit bottom
+        function createImpactEffect(x, y, color) {
+            const effect = document.createElement('div');
+            effect.className = 'impact-effect';
+            effect.style.left = x + 'px';
+            effect.style.top = y + 'px';
+            effect.style.background = `radial-gradient(circle, ${color}44, transparent)`;
+            
+            document.querySelector('.physics-playground').appendChild(effect);
+            
+            setTimeout(() => effect.remove(), 500);
+        }
+
+        // Particle trails
+        function createParticleTrail(ball) {
+            const rect = ball.getBoundingClientRect();
+            const playgroundRect = document.querySelector('.physics-playground').getBoundingClientRect();
+            
+            const particle = document.createElement('div');
+            particle.className = 'particle-trail';
+            particle.style.left = (rect.left - playgroundRect.left + rect.width/2) + 'px';
+            particle.style.top = (rect.top - playgroundRect.top + rect.height/2) + 'px';
+            particle.style.background = window.getComputedStyle(ball).boxShadow.includes('rgb') ? 
+                window.getComputedStyle(ball).boxShadow.match(/rgb\([^)]+\)/)[0] : '#ffffff';
+            
+            document.querySelector('.physics-playground').appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 1000);
+        }
+
+        // Monitor ball positions and create effects
+        function monitorBalls() {
+            const allBalls = document.querySelectorAll('[class*="ball"]');
+            
+            allBalls.forEach(ball => {
+                const rect = ball.getBoundingClientRect();
+                const playgroundRect = document.querySelector('.physics-playground').getBoundingClientRect();
+                
+                // Create particle trails randomly
+                if (Math.random() < 0.1) {
+                    createParticleTrail(ball);
+                }
+                
+                // Create impact effects when balls are at bottom
+                const relativeBottom = rect.bottom - playgroundRect.top;
+                const playgroundHeight = playgroundRect.height;
+                
+                if (relativeBottom > playgroundHeight - 50 && Math.random() < 0.3) {
+                    const color = window.getComputedStyle(ball).boxShadow.includes('rgb') ? 
+                        window.getComputedStyle(ball).boxShadow.match(/rgb\([^)]+\)/)?.[0] || '#ffffff' : '#ffffff';
+                    createImpactEffect(
+                        rect.left - playgroundRect.left + rect.width/2,
+                        relativeBottom,
+                        color
+                    );
+                }
+            });
+            
+            if (!isPaused) {
+                requestAnimationFrame(monitorBalls);
+            }
+        }
+
+        // FPS Counter
+        let fps = 0;
+        let lastTime = performance.now();
+        let frameCount = 0;
+
+        function updateFPS() {
+            frameCount++;
+            const currentTime = performance.now();
+            
+            if (currentTime - lastTime >= 1000) {
+                fps = Math.round(frameCount * 1000 / (currentTime - lastTime));
+                document.getElementById('fps').textContent = fps;
+                frameCount = 0;
+                lastTime = currentTime;
+            }
+            
+            requestAnimationFrame(updateFPS);
+        }
+
+        // Mouse interaction - add temporary balls
+        document.querySelector('.physics-playground').addEventListener('click', (e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const tempBall = document.createElement('div');
+            tempBall.style.position = 'absolute';
+            tempBall.style.width = '25px';
+            tempBall.style.height = '25px';
+            tempBall.style.borderRadius = '50%';
+            tempBall.style.left = x - 12.5 + 'px';
+            tempBall.style.top = y - 12.5 + 'px';
+            tempBall.style.background = 'radial-gradient(circle at 30% 30%, #fff, #888)';
+            tempBall.style.boxShadow = '0 0 30px rgba(255, 255, 255, 0.8)';
+            tempBall.style.animation = 'classicBounce1 1.5s ease-in-out infinite';
+            tempBall.style.zIndex = '100';
+            
+            e.currentTarget.appendChild(tempBall);
+            
+            // Update ball count
+            const currentCount = parseInt(document.getElementById('ballCount').textContent);
+            document.getElementById('ballCount').textContent = currentCount + 1;
+            
+            // Remove after 5 seconds
+            setTimeout(() => {
+                tempBall.remove();
+                const newCount = parseInt(document.getElementById('ballCount').textContent);
+                document.getElementById('ballCount').textContent = newCount - 1;
+            }, 5000);
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case ' ':
+                    e.preventDefault();
+                    pauseBtn.click();
+                    break;
+                case '1':
+                    speedButtons[0].click();
+                    break;
+                case '2':
+                    speedButtons[1].click();
+                    break;
+                case '3':
+                    speedButtons[2].click();
+                    break;
+                case 'g':
+                case 'G':
+                    gravityBtn.click();
+                    break;
+            }
+        });
+
+        // Start monitoring and FPS counter
+        monitorBalls();
+        updateFPS();
+
+        // Random color changes
+        setInterval(() => {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff', '#5f27cd'];
+            const randomBall = document.querySelectorAll('[class*="ball"]')[Math.floor(Math.random() * 24)];
+            if (randomBall) {
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                randomBall.style.boxShadow = `0 0 30px ${randomColor}`;
+                
+                setTimeout(() => {
+                    randomBall.style.boxShadow = '';
+                }, 2000);
+            }
+        }, 1500);
+
+        // Performance optimization
+        let isVisible = true;
+        document.addEventListener('visibilitychange', () => {
+            isVisible = !document.hidden;
+            const allBalls = document.querySelectorAll('[class*="ball"]');
+            allBalls.forEach(ball => {
+                ball.style.animationPlayState = isVisible ? 'running' : 'paused';
+            });
+        });
+    </script>
+</body>
+</html>

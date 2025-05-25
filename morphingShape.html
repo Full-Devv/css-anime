@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Morphing Shapes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(45deg, #1e3c72, #2a5298, #667eea, #764ba2);
+            background-size: 400% 400%;
+            animation: gradientFlow 8s ease infinite;
+            min-height: 100vh;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            position: relative;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .title {
+            color: white;
+            font-size: 3.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 3rem;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.7);
+            animation: titlePulse 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes titlePulse {
+            from { 
+                text-shadow: 0 0 30px rgba(255, 255, 255, 0.7);
+                transform: scale(1);
+            }
+            to { 
+                text-shadow: 0 0 50px rgba(255, 255, 255, 1), 0 0 80px rgba(102, 126, 234, 0.8);
+                transform: scale(1.05);
+            }
+        }
+
+        .morphing-stage {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Main morphing shape */
+        .morphing-shape {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(45deg, #ff9a9e, #fecfef, #ffecd2, #fcb69f);
+            background-size: 400% 400%;
+            animation: 
+                morph 6s ease-in-out infinite,
+                colorShift 4s ease-in-out infinite,
+                mainFloat 3s ease-in-out infinite;
+            box-shadow: 
+                0 0 40px rgba(255, 154, 158, 0.6),
+                0 0 80px rgba(252, 182, 159, 0.4),
+                inset 0 0 40px rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 5;
+        }
+
+        @keyframes morph {
+            0% { 
+                border-radius: 0%;
+                transform: rotate(0deg) scale(1);
+            }
+            16% { 
+                border-radius: 50% 0% 50% 0%;
+                transform: rotate(45deg) scale(1.1);
+            }
+            33% { 
+                border-radius: 50%;
+                transform: rotate(90deg) scale(0.9);
+            }
+            50% { 
+                border-radius: 0% 50% 0% 50%;
+                transform: rotate(135deg) scale(1.2);
+            }
+            66% { 
+                border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+                transform: rotate(180deg) scale(1);
+            }
+            83% { 
+                border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
+                transform: rotate(270deg) scale(1.1);
+            }
+            100% { 
+                border-radius: 0%;
+                transform: rotate(360deg) scale(1);
+            }
+        }
+
+        @keyframes colorShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes mainFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Secondary morphing shapes */
+        .shape-satellite {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 300% 300%;
+            animation: 
+                satelliteOrbit 8s linear infinite,
+                satelliteMorph 4s ease-in-out infinite,
+                satelliteColor 3s ease-in-out infinite;
+            box-shadow: 0 0 30px currentColor;
+        }
+
+        .satellite-1 {
+            color: rgba(102, 126, 234, 0.7);
+            animation-delay: 0s;
+        }
+
+        .satellite-2 {
+            color: rgba(245, 87, 108, 0.7);
+            animation-delay: -2s;
+        }
+
+        .satellite-3 {
+            color: rgba(118, 75, 162, 0.7);
+            animation-delay: -4s;
+        }
+
+        .satellite-4 {
+            color: rgba(240, 147, 251, 0.7);
+            animation-delay: -6s;
+        }
+
+        @keyframes satelliteOrbit {
+            from { transform: rotate(0deg) translateX(250px) rotate(0deg); }
+            to { transform: rotate(360deg) translateX(250px) rotate(-360deg); }
+        }
+
+        @keyframes satelliteMorph {
+            0%, 100% { 
+                border-radius: 50%;
+                transform: scale(1);
+            }
+            25% { 
+                border-radius: 0% 100% 0% 100%;
+                transform: scale(0.8);
+            }
+            50% { 
+                border-radius: 100% 0% 100% 0%;
+                transform: scale(1.2);
+            }
+            75% { 
+                border-radius: 50% 50% 0% 0%;
+                transform: scale(0.9);
+            }
+        }
+
+        @keyframes satelliteColor {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Micro shapes for extra detail */
+        .micro-shape {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: microDance 5s ease-in-out infinite;
+            box-shadow: 0 0 20px white;
+        }
+
+        .micro-1 { animation-delay: 0s; }
+        .micro-2 { animation-delay: -1s; }
+        .micro-3 { animation-delay: -2s; }
+        .micro-4 { animation-delay: -3s; }
+        .micro-5 { animation-delay: -4s; }
+
+        @keyframes microDance {
+            0% { 
+                transform: translate(0, 0) scale(0.5);
+                border-radius: 50%;
+            }
+            25% { 
+                transform: translate(100px, -50px) scale(1);
+                border-radius: 0%;
+            }
+            50% { 
+                transform: translate(50px, -100px) scale(0.7);
+                border-radius: 50%;
+            }
+            75% { 
+                transform: translate(-50px, -50px) scale(1.2);
+                border-radius: 20%;
+            }
+            100% { 
+                transform: translate(0, 0) scale(0.5);
+                border-radius: 50%;
+            }
+        }
+
+        /* Ripple effects */
+        .ripple {
+            position: absolute;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: rippleExpand 3s ease-out infinite;
+            pointer-events: none;
+        }
+
+        .ripple:nth-child(odd) {
+            animation-delay: -1.5s;
+        }
+
+        @keyframes rippleExpand {
+            0% {
+                width: 50px;
+                height: 50px;
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+            100% {
+                width: 400px;
+                height: 400px;
+                opacity: 0;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        /* Energy trails */
+        .energy-trail {
+            position: absolute;
+            width: 200px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+            animation: trailMove 2s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes trailMove {
+            0% { 
+                transform: translateX(-200px) rotate(0deg);
+                opacity: 0;
+            }
+            50% { 
+                opacity: 1;
+            }
+            100% { 
+                transform: translateX(200px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Geometric overlays */
+        .geo-overlay {
+            position: absolute;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: geoRotate 10s linear infinite;
+            pointer-events: none;
+        }
+
+        .triangle {
+            width: 0;
+            height: 0;
+            border-left: 100px solid transparent;
+            border-right: 100px solid transparent;
+            border-bottom: 150px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .hexagon {
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.05);
+            clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
+            animation: geoRotate 8s linear infinite reverse;
+        }
+
+        @keyframes geoRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Interactive cursor effect */
+        .cursor-follower {
+            position: fixed;
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            transition: transform 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor-follower"></div>
+    
+    <div class="container">
+        <h1 class="title">Morphing Universe</h1>
+        
+        <div class="morphing-stage">
+            <!-- Main morphing shape -->
+            <div class="morphing-shape"></div>
+            
+            <!-- Satellite shapes -->
+            <div class="shape-satellite satellite-1"></div>
+            <div class="shape-satellite satellite-2"></div>
+            <div class="shape-satellite satellite-3"></div>
+            <div class="shape-satellite satellite-4"></div>
+            
+            <!-- Micro dancing shapes -->
+            <div class="micro-shape micro-1" style="top: 10%; left: 20%;"></div>
+            <div class="micro-shape micro-2" style="top: 80%; right: 15%;"></div>
+            <div class="micro-shape micro-3" style="bottom: 20%; left: 10%;"></div>
+            <div class="micro-shape micro-4" style="top: 30%; right: 30%;"></div>
+            <div class="micro-shape micro-5" style="bottom: 40%; right: 20%;"></div>
+            
+            <!-- Ripple effects -->
+            <div class="ripple" style="top: 50%; left: 50%;"></div>
+            <div class="ripple" style="top: 50%; left: 50%;"></div>
+            
+            <!-- Energy trails -->
+            <div class="energy-trail" style="top: 30%; left: 30%;"></div>
+            <div class="energy-trail" style="top: 70%; left: 40%; animation-delay: -1s;"></div>
+            
+            <!-- Geometric overlays -->
+            <div class="geo-overlay triangle" style="top: 20%; right: 20%;"></div>
+            <div class="geo-overlay hexagon" style="bottom: 20%; left: 15%;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Cursor follower effect
+        const cursorFollower = document.querySelector('.cursor-follower');
+        let mouseX = 0, mouseY = 0;
+        let followerX = 0, followerY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animateFollower() {
+            followerX += (mouseX - followerX) * 0.1;
+            followerY += (mouseY - followerY) * 0.1;
+            
+            cursorFollower.style.left = followerX - 25 + 'px';
+            cursorFollower.style.top = followerY - 25 + 'px';
+            
+            requestAnimationFrame(animateFollower);
+        }
+        animateFollower();
+
+        // Interactive shape response to mouse
+        const mainShape = document.querySelector('.morphing-shape');
+        const satellites = document.querySelectorAll('.shape-satellite');
+
+        document.addEventListener('mousemove', (e) => {
+            const rect = mainShape.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            const distance = Math.sqrt(
+                Math.pow(e.clientX - centerX, 2) + 
+                Math.pow(e.clientY - centerY, 2)
+            );
+            
+            if (distance < 200) {
+                const intensity = (200 - distance) / 200;
+                mainShape.style.transform = `scale(${1 + intensity * 0.3})`;
+                mainShape.style.filter = `brightness(${1 + intensity * 0.5}) saturate(${1 + intensity})`;
+                
+                // Affect satellites too
+                satellites.forEach((satellite, index) => {
+                    satellite.style.animationPlayState = distance < 150 ? 'paused' : 'running';
+                    if (distance < 150) {
+                        satellite.style.transform = `scale(${1 + intensity * 0.5})`;
+                    }
+                });
+            } else {
+                mainShape.style.transform = 'scale(1)';
+                mainShape.style.filter = 'brightness(1) saturate(1)';
+                satellites.forEach(satellite => {
+                    satellite.style.animationPlayState = 'running';
+                    satellite.style.transform = 'scale(1)';
+                });
+            }
+        });
+
+        // Click effect - create temporary explosion
+        document.addEventListener('click', (e) => {
+            const explosion = document.createElement('div');
+            explosion.style.position = 'fixed';
+            explosion.style.left = e.clientX + 'px';
+            explosion.style.top = e.clientY + 'px';
+            explosion.style.width = '10px';
+            explosion.style.height = '10px';
+            explosion.style.background = 'radial-gradient(circle, white, transparent)';
+            explosion.style.borderRadius = '50%';
+            explosion.style.pointerEvents = 'none';
+            explosion.style.zIndex = '1001';
+            explosion.style.animation = 'explode 0.6s ease-out forwards';
+            
+            document.body.appendChild(explosion);
+            
+            setTimeout(() => explosion.remove(), 600);
+        });
+
+        // Add explosion keyframes dynamically
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes explode {
+                0% { 
+                    width: 10px; 
+                    height: 10px; 
+                    opacity: 1;
+                    transform: translate(-50%, -50%) scale(1);
+                }
+                100% { 
+                    width: 200px; 
+                    height: 200px; 
+                    opacity: 0;
+                    transform: translate(-50%, -50%) scale(2);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Random micro shapes generator
+        setInterval(() => {
+            const microShape = document.createElement('div');
+            microShape.className = 'micro-shape';
+            microShape.style.position = 'absolute';
+            microShape.style.left = Math.random() * 100 + '%';
+            microShape.style.top = Math.random() * 100 + '%';
+            microShape.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            
+            document.querySelector('.morphing-stage').appendChild(microShape);
+            
+            setTimeout(() => microShape.remove(), 5000);
+        }, 2000);
+    </script>
+</body>
+</html>

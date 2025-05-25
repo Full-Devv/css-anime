@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Pulse Ring System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            position: relative;
+        }
+
+        /* Animated grid background */
+        .grid-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridShift 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes gridShift {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            z-index: 10;
+        }
+
+        .title {
+            color: #00ffff;
+            font-size: 4rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 3rem;
+            text-shadow: 
+                0 0 20px #00ffff,
+                0 0 40px #00ffff,
+                0 0 80px #00ffff;
+            animation: titlePulse 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes titlePulse {
+            from { 
+                text-shadow: 
+                    0 0 20px #00ffff,
+                    0 0 40px #00ffff,
+                    0 0 80px #00ffff;
+            }
+            to { 
+                text-shadow: 
+                    0 0 30px #ff0080,
+                    0 0 60px #ff0080,
+                    0 0 120px #ff0080;
+            }
+        }
+
+        .pulse-system {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Central core */
+        .core {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #fff 0%, #00ffff 50%, #ff0080 100%);
+            border-radius: 50%;
+            box-shadow: 
+                0 0 30px #00ffff,
+                0 0 60px #00ffff,
+                inset 0 0 20px rgba(255, 255, 255, 0.5);
+            animation: coreRotate 4s linear infinite, corePulse 2s ease-in-out infinite alternate;
+            z-index: 100;
+        }
+
+        @keyframes coreRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes corePulse {
+            from { 
+                transform: scale(1);
+                box-shadow: 
+                    0 0 30px #00ffff,
+                    0 0 60px #00ffff,
+                    inset 0 0 20px rgba(255, 255, 255, 0.5);
+            }
+            to { 
+                transform: scale(1.3);
+                box-shadow: 
+                    0 0 50px #ff0080,
+                    0 0 100px #ff0080,
+                    inset 0 0 30px rgba(255, 255, 255, 0.8);
+            }
+        }
+
+        /* Main pulse rings */
+        .pulse-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 3px solid;
+            animation-timing-function: ease-out;
+            animation-iteration-count: infinite;
+        }
+
+        .ring-primary {
+            border-color: #00ffff;
+            animation: primaryPulse 3s infinite;
+        }
+
+        .ring-secondary {
+            border-color: #ff0080;
+            animation: secondaryPulse 3s infinite;
+            animation-delay: -1s;
+        }
+
+        .ring-tertiary {
+            border-color: #ffff00;
+            animation: tertiaryPulse 3s infinite;
+            animation-delay: -2s;
+        }
+
+        @keyframes primaryPulse {
+            0% {
+                width: 60px;
+                height: 60px;
+                opacity: 1;
+                border-width: 3px;
+                transform: translate(-50%, -50%);
+            }
+            100% {
+                width: 500px;
+                height: 500px;
+                opacity: 0;
+                border-width: 0px;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        @keyframes secondaryPulse {
+            0% {
+                width: 60px;
+                height: 60px;
+                opacity: 0.8;
+                border-width: 4px;
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            100% {
+                width: 600px;
+                height: 600px;
+                opacity: 0;
+                border-width: 0px;
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        @keyframes tertiaryPulse {
+            0% {
+                width: 60px;
+                height: 60px;
+                opacity: 0.6;
+                border-width: 2px;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                border-width: 6px;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+            100% {
+                width: 400px;
+                height: 400px;
+                opacity: 0;
+                border-width: 0px;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+        }
+
+        /* Sound wave rings */
+        .sound-wave {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            animation: soundWave 2s linear infinite;
+        }
+
+        .wave-1 { animation-delay: 0s; }
+        .wave-2 { animation-delay: -0.4s; }
+        .wave-3 { animation-delay: -0.8s; }
+        .wave-4 { animation-delay: -1.2s; }
+        .wave-5 { animation-delay: -1.6s; }
+
+        @keyframes soundWave {
+            0% {
+                width: 80px;
+                height: 80px;
+                opacity: 0.8;
+                transform: translate(-50%, -50%);
+            }
+            100% {
+                width: 300px;
+                height: 300px;
+                opacity: 0;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        /* Orbital rings */
+        .orbital-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: orbitalRotate 8s linear infinite;
+        }
+
+        .orbital-1 {
+            width: 200px;
+            height: 200px;
+            animation-duration: 6s;
+        }
+
+        .orbital-2 {
+            width: 300px;
+            height: 300px;
+            animation-duration: 10s;
+            animation-direction: reverse;
+        }
+
+        .orbital-3 {
+            width: 400px;
+            height: 400px;
+            animation-duration: 14s;
+        }
+
+        @keyframes orbitalRotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Orbital dots */
+        .orbital-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .dot-1 {
+            color: #00ffff;
+            animation: orbitDot1 6s linear infinite;
+        }
+
+        .dot-2 {
+            color: #ff0080;
+            animation: orbitDot2 10s linear infinite;
+        }
+
+        .dot-3 {
+            color: #ffff00;
+            animation: orbitDot3 14s linear infinite;
+        }
+
+        @keyframes orbitDot1 {
+            from { transform: rotate(0deg) translateX(100px) rotate(0deg); }
+            to { transform: rotate(360deg) translateX(100px) rotate(-360deg); }
+        }
+
+        @keyframes orbitDot2 {
+            from { transform: rotate(0deg) translateX(150px) rotate(0deg); }
+            to { transform: rotate(-360deg) translateX(150px) rotate(360deg); }
+        }
+
+        @keyframes orbitDot3 {
+            from { transform: rotate(0deg) translateX(200px) rotate(0deg); }
+            to { transform: rotate(360deg) translateX(200px) rotate(-360deg); }
+        }
+
+        /* Energy bursts */
+        .energy-burst {
+            position: absolute;
+            width: 4px;
+            height: 40px;
+            background: linear-gradient(0deg, transparent, #00ffff, transparent);
+            border-radius: 2px;
+            animation: energyBurst 1s ease-out infinite;
+            transform-origin: center bottom;
+        }
+
+        .burst-1 { animation-delay: 0s; transform: rotate(0deg); }
+        .burst-2 { animation-delay: -0.2s; transform: rotate(45deg); }
+        .burst-3 { animation-delay: -0.4s; transform: rotate(90deg); }
+        .burst-4 { animation-delay: -0.6s; transform: rotate(135deg); }
+        .burst-5 { animation-delay: -0.8s; transform: rotate(180deg); }
+        .burst-6 { animation-delay: -1.0s; transform: rotate(225deg); }
+        .burst-7 { animation-delay: -1.2s; transform: rotate(270deg); }
+        .burst-8 { animation-delay: -1.4s; transform: rotate(315deg); }
+
+        @keyframes energyBurst {
+            0% { 
+                height: 20px;
+                opacity: 0;
+                transform: scale(1);
+            }
+            50% { 
+                height: 80px;
+                opacity: 1;
+                transform: scale(1.5);
+            }
+            100% { 
+                height: 20px;
+                opacity: 0;
+                transform: scale(1);
+            }
+        }
+
+        /* Particle field */
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            animation: particleFloat 4s linear infinite;
+        }
+
+        @keyframes particleFloat {
+            0% { 
+                transform: translate(0, 0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+                transform: translate(10px, -20px) scale(1);
+            }
+            90% {
+                opacity: 1;
+                transform: translate(-20px, -100px) scale(0.5);
+            }
+            100% { 
+                transform: translate(-30px, -120px) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* Frequency bars */
+        .frequency-bar {
+            position: absolute;
+            width: 4px;
+            background: linear-gradient(0deg, #00ffff, #ff0080);
+            border-radius: 2px;
+            animation: frequencyBounce 0.8s ease-in-out infinite alternate;
+            bottom: -100px;
+            left: 50%;
+        }
+
+        .freq-1 { margin-left: -60px; height: 20px; animation-delay: 0s; }
+        .freq-2 { margin-left: -40px; height: 35px; animation-delay: -0.1s; }
+        .freq-3 { margin-left: -20px; height: 50px; animation-delay: -0.2s; }
+        .freq-4 { margin-left: 0px; height: 65px; animation-delay: -0.3s; }
+        .freq-5 { margin-left: 20px; height: 50px; animation-delay: -0.4s; }
+        .freq-6 { margin-left: 40px; height: 35px; animation-delay: -0.5s; }
+        .freq-7 { margin-left: 60px; height: 20px; animation-delay: -0.6s; }
+
+        @keyframes frequencyBounce {
+            0% { transform: scaleY(0.5); }
+            100% { transform: scaleY(2); }
+        }
+
+        /* Interactive glow effect */
+        .interactive-glow {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.1), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 5;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-background"></div>
+    <div class="interactive-glow"></div>
+    
+    <div class="container">
+        <h1 class="title">Pulse Ring System</h1>
+        
+        <div class="pulse-system">
+            <!-- Central core -->
+            <div class="core"></div>
+            
+            <!-- Main pulse rings -->
+            <div class="pulse-ring ring-primary" style="top: 50%; left: 50%;"></div>
+            <div class="pulse-ring ring-secondary" style="top: 50%; left: 50%;"></div>
+            <div class="pulse-ring ring-tertiary" style="top: 50%; left: 50%;"></div>
+            
+            <!-- Sound wave rings -->
+            <div class="sound-wave wave-1" style="top: 50%; left: 50%;"></div>
+            <div class="sound-wave wave-2" style="top: 50%; left: 50%;"></div>
+            <div class="sound-wave wave-3" style="top: 50%; left: 50%;"></div>
+            <div class="sound-wave wave-4" style="top: 50%; left: 50%;"></div>
+            <div class="sound-wave wave-5" style="top: 50%; left: 50%;"></div>
+            
+            <!-- Orbital rings -->
+            <div class="orbital-ring orbital-1" style="top: 50%; left: 50%;"></div>
+            <div class="orbital-ring orbital-2" style="top: 50%; left: 50%;"></div>
+            <div class="orbital-ring orbital-3" style="top: 50%; left: 50%;"></div>
+            
+            <!-- Orbital dots -->
+            <div class="orbital-dot dot-1"></div>
+            <div class="orbital-dot dot-2"></div>
+            <div class="orbital-dot dot-3"></div>
+            
+            <!-- Energy bursts -->
+            <div class="energy-burst burst-1"></div>
+            <div class="energy-burst burst-2"></div>
+            <div class="energy-burst burst-3"></div>
+            <div class="energy-burst burst-4"></div>
+            <div class="energy-burst burst-5"></div>
+            <div class="energy-burst burst-6"></div>
+            <div class="energy-burst burst-7"></div>
+            <div class="energy-burst burst-8"></div>
+            
+            <!-- Frequency bars -->
+            <div class="frequency-bar freq-1"></div>
+            <div class="frequency-bar freq-2"></div>
+            <div class="frequency-bar freq-3"></div>
+            <div class="frequency-bar freq-4"></div>
+            <div class="frequency-bar freq-5"></div>
+            <div class="frequency-bar freq-6"></div>
+            <div class="frequency-bar freq-7"></div>
+        </div>
+    </div>
+
+    <script>
+        // Interactive glow that follows mouse
+        const interactiveGlow = document.querySelector('.interactive-glow');
+        let mouseX = 0, mouseY = 0;
+        let glowX = 0, glowY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animateGlow() {
+            glowX += (mouseX - glowX) * 0.1;
+            glowY += (mouseY - glowY) * 0.1;
+            
+            interactiveGlow.style.left = glowX - 100 + 'px';
+            interactiveGlow.style.top = glowY - 100 + 'px';
+            
+            requestAnimationFrame(animateGlow);
+        }
+        animateGlow();
+
+        // Dynamic particle generation
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = (400 + Math.random() * 100 - 50) + 'px';
+            particle.style.top = (300 + Math.random() * 100 - 50) + 'px';
+            particle.style.animationDelay = Math.random() * 2 + 's';
+            
+            document.querySelector('.pulse-system').appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 4000);
+        }
+
+        // Generate particles continuously
+        setInterval(createParticle, 200);
+
+        // Click interaction - create shockwave
+        document.addEventListener('click', (e) => {
+            const rect = document.querySelector('.pulse-system').getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const clickY = e.clientY - rect.top;
+            
+            const shockwave = document.createElement('div');
+            shockwave.style.position = 'absolute';
+            shockwave.style.left = clickX + 'px';
+            shockwave.style.top = clickY + 'px';
+            shockwave.style.width = '10px';
+            shockwave.style.height = '10px';
+            shockwave.style.border = '2px solid #fff';
+            shockwave.style.borderRadius = '50%';
+            shockwave.style.animation = 'shockwaveExpand 1s ease-out forwards';
+            shockwave.style.pointerEvents = 'none';
+            
+            document.querySelector('.pulse-system').appendChild(shockwave);
+            
+            setTimeout(() => shockwave.remove(), 1000);
+        });
+
+        // Add shockwave animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shockwaveExpand {
+                0% { 
+                    width: 10px; 
+                    height: 10px; 
+                    opacity: 1;
+                    transform: translate(-50%, -50%);
+                }
+                100% { 
+                    width: 300px; 
+                    height: 300px; 
+                    opacity: 0;
+                    transform: translate(-50%, -50%);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Core interaction - change colors on hover
+        const core = document.querySelector('.core');
+        const pulseRings = document.querySelectorAll('.pulse-ring');
+
+        core.addEventListener('mouseenter', () => {
+            core.style.background = 'radial-gradient(circle, #fff 0%, #ff0080 50%, #ffff00 100%)';
+            pulseRings.forEach(ring => {
+                ring.style.animationDuration = '1.5s';
+            });
+        });
+
+        core.addEventListener('mouseleave', () => {
+            core.style.background = 'radial-gradient(circle, #fff 0%, #00ffff 50%, #ff0080 100%)';
+            pulseRings.forEach(ring => {
+                ring.style.animationDuration = '3s';
+            });
+        });
+
+        // Audio-reactive effect simulation
+        let intensity = 0;
+        const frequencyBars = document.querySelectorAll('.frequency-bar');
+
+        function simulateAudioReactive() {
+            intensity = Math.sin(Date.now() * 0.005) * 0.5 + 0.5;
+            
+            frequencyBars.forEach((bar, index) => {
+                const randomIntensity = intensity + Math.random() * 0.3;
+                bar.style.transform = `scaleY(${0.5 + randomIntensity * 2})`;
+                bar.style.opacity = 0.5 + randomIntensity * 0.5;
+            });
+            
+            requestAnimationFrame(simulateAudioReactive);
+        }
+        simulateAudioReactive();
+
+        // Breathing effect for the whole system
+        const pulseSystem = document.querySelector('.pulse-system');
+        let breathingPhase = 0;
+
+        function breathingEffect() {
+            breathingPhase += 0.02;
+            const scale = 1 + Math.sin(breathingPhase) * 0.05;
+            pulseSystem.style.transform = `scale(${scale})`;
+            
+            requestAnimationFrame(breathingEffect);
+        }
+        breathingEffect();
+    </script>
+</body>
+</html>
