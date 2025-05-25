@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Software Architecture Flow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c0c0c, #1a1a2e, #16213e);
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Animated background particles */
+        .bg-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(0, 255, 136, 0.3);
+            border-radius: 50%;
+            animation: float 8s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            width: 90vw;
+            height: 80vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            z-index: 1;
+        }
+
+        .layer {
+            width: 220px;
+            height: 300px;
+            border-radius: 20px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { 
+                transform: scale(1) translateY(0px);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            }
+            50% { 
+                transform: scale(1.02) translateY(-5px);
+                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        .layer:hover {
+            transform: scale(1.05) translateY(-10px) !important;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        .frontend {
+            background: linear-gradient(145deg, rgba(0, 123, 255, 0.2), rgba(0, 86, 179, 0.3));
+            border-color: rgba(0, 123, 255, 0.4);
+            animation-delay: 0s;
+        }
+
+        .backend {
+            background: linear-gradient(145deg, rgba(40, 167, 69, 0.2), rgba(34, 139, 58, 0.3));
+            border-color: rgba(40, 167, 69, 0.4);
+            animation-delay: 1.3s;
+        }
+
+        .database {
+            background: linear-gradient(145deg, rgba(220, 53, 69, 0.2), rgba(183, 44, 57, 0.3));
+            border-color: rgba(220, 53, 69, 0.4);
+            animation-delay: 2.6s;
+        }
+
+        .layer-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            animation: iconSpin 8s linear infinite;
+        }
+
+        @keyframes iconSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .layer-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); }
+            100% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 30px rgba(0, 255, 136, 0.3); }
+        }
+
+        .layer-desc {
+            font-size: 14px;
+            text-align: center;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        .connection {
+            position: absolute;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #00ff88, #00ff88, transparent);
+            border-radius: 2px;
+            top: 50%;
+            transform: translateY(-50%);
+            animation: connectionPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes connectionPulse {
+            0%, 100% { 
+                opacity: 0.3;
+                box-shadow: 0 0 5px #00ff88;
+            }
+            50% { 
+                opacity: 1;
+                box-shadow: 0 0 20px #00ff88, 0 0 40px rgba(0, 255, 136, 0.3);
+            }
+        }
+
+        .connection-1 {
+            left: 240px;
+            width: 200px;
+        }
+
+        .connection-2 {
+            right: 240px;
+            width: 200px;
+        }
+
+        .data-packet {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 15px currentColor;
+        }
+
+        /* Multiple data packets with different colors and speeds */
+        .packet-request {
+            background: #00ff88;
+            left: 240px;
+            animation: slideRight 2s ease-in-out infinite;
+        }
+
+        .packet-request-2 {
+            background: #0099ff;
+            left: 240px;
+            animation: slideRight 2s ease-in-out infinite 0.5s;
+        }
+
+        .packet-response {
+            background: #ff6b6b;
+            right: 452px;
+            animation: slideLeft 2s ease-in-out infinite 1s;
+        }
+
+        .packet-response-2 {
+            background: #ffd93d;
+            right: 452px;
+            animation: slideLeft 2s ease-in-out infinite 1.5s;
+        }
+
+        .packet-db-query {
+            background: #ff6b6b;
+            left: 660px;
+            animation: slideRightDB 2s ease-in-out infinite 0.3s;
+        }
+
+        .packet-db-result {
+            background: #00ff88;
+            right: 240px;
+            animation: slideLeftDB 2s ease-in-out infinite 1.3s;
+        }
+
+        @keyframes slideRight {
+            0% { 
+                left: 240px; 
+                opacity: 0;
+                transform: translateY(-50%) scale(0.5);
+            }
+            10% { 
+                opacity: 1;
+                transform: translateY(-50%) scale(1);
+            }
+            90% { 
+                opacity: 1;
+                transform: translateY(-50%) scale(1);
+            }
+            100% { 
+                left: 440px; 
+                opacity: 0;
+                transform: translateY(-50%) scale(0.5);
+            }
+        }
+
+        @keyframes slideLeft {
+            0% { 
+                right: 452px; 
+                opacity: 0;
+                transform: translateY(-50%) scale(0.5);
+            }
+            10% { 
+                opacity: 1;
+                transform: translateY(-50%) scale(1);
+            }
+            90% { 
+                opacity: 1;
+                transform: translateY(-50%) scale(1);
+            }
+            100% { 
+                right: 652px; 
+                opacity: 0;
+                transform: translateY(-50%) scale(0.5);
+            }
+        }
+
+        @keyframes slideRightDB {
+            0% { 
+                left: 660px; 
+                opacity: 0;
+                transform: translateY(-50%) scale(0.5);
+            }
+            10% { 
+                opacity: 1;
+                transform: translateY(-50%) scale(1);
+            }
+            90% { 
+                opacity: 1;
+                transform: translateY(-50%) scale(1);
+            }
+            100% { 
+                left: 860px; 
+                opacity: 0;
+                transform: translateY(-50%) scale(0.5);
+            }
+        }
+
+        @keyframes slideLeftDB {
+            0% { 
+                right: 240px; 
+                opacity: 0;
+                transform: translateY(-50%) scale(0.5);
+            }
+            10% { 
+                opacity: 1;
+                transform: translateY(-50%) scale(1);
+            }
+            90% { 
+                opacity: 1;
+                transform: translateY(-50%) scale(1);
+            }
+            100% { 
+                right: 440px; 
+                opacity: 0;
+                transform: translateY(-50%) scale(0.5);
+            }
+        }
+
+        .status-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #00ff88;
+            animation: statusBlink 1.5s ease-in-out infinite;
+            box-shadow: 0 0 10px #00ff88;
+        }
+
+        @keyframes statusBlink {
+            0%, 100% { 
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 0.3;
+                transform: scale(1.2);
+            }
+        }
+
+        .control-panel {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        button {
+            background: linear-gradient(145deg, #007bff, #0056b3);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+            transition: all 0.3s ease;
+            margin: 0 10px;
+            animation: buttonPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes buttonPulse {
+            0%, 100% { 
+                box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+            }
+            50% { 
+                box-shadow: 0 6px 25px rgba(0, 123, 255, 0.5);
+            }
+        }
+
+        button:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.6);
+            animation: none;
+        }
+
+        .info-text {
+            margin-bottom: 20px;
+            font-size: 18px;
+            opacity: 0.9;
+            animation: textFade 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes textFade {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        .flow-labels {
+            position: absolute;
+            font-size: 12px;
+            color: #00ff88;
+            font-weight: bold;
+            animation: labelGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes labelGlow {
+            0% { 
+                opacity: 0.7;
+                text-shadow: 0 0 5px #00ff88;
+            }
+            100% { 
+                opacity: 1;
+                text-shadow: 0 0 15px #00ff88, 0 0 25px rgba(0, 255, 136, 0.5);
+            }
+        }
+
+        .label-request {
+            top: 35%;
+            left: 320px;
+        }
+
+        .label-response {
+            top: 65%;
+            right: 320px;
+        }
+
+        .label-db-query {
+            top: 35%;
+            right: 120px;
+        }
+
+        .label-db-response {
+            top: 65%;
+            right: 520px;
+        }
+
+        /* Network activity indicators */
+        .network-activity {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            top: 20%;
+            background: linear-gradient(90deg, transparent, #00ff88, transparent);
+            animation: networkScan 3s linear infinite;
+        }
+
+        @keyframes networkScan {
+            0% { 
+                left: -100%;
+                opacity: 0;
+            }
+            50% { 
+                opacity: 1;
+            }
+            100% { 
+                left: 100%;
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+                padding: 20px;
+            }
+            
+            .layer {
+                width: 80%;
+                margin: 20px 0;
+            }
+            
+            .connection {
+                display: none;
+            }
+            
+            .data-packet {
+                display: none;
+            }
+            
+            .flow-labels {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-particles" id="particles"></div>
+    <div class="network-activity"></div>
+    
+    <div class="container">
+        <!-- Frontend Layer -->
+        <div class="layer frontend">
+            <div class="status-indicator"></div>
+            <div class="layer-icon">🖥️</div>
+            <div class="layer-title">Frontend</div>
+            <div class="layer-desc">User Interface<br>React, Vue, Angular<br>User interactions</div>
+        </div>
+
+        <!-- Backend Layer -->
+        <div class="layer backend">
+            <div class="status-indicator"></div>
+            <div class="layer-icon">⚙️</div>
+            <div class="layer-title">Backend</div>
+            <div class="layer-desc">API & Business Logic<br>Node.js, Python, Java<br>Request processing</div>
+        </div>
+
+        <!-- Database Layer -->
+        <div class="layer database">
+            <div class="status-indicator"></div>
+            <div class="layer-icon">🗃️</div>
+            <div class="layer-title">Database</div>
+            <div class="layer-desc">Data Storage<br>MySQL, MongoDB<br>Data persistence</div>
+        </div>
+
+        <!-- Connections -->
+        <div class="connection connection-1"></div>
+        <div class="connection connection-2"></div>
+
+        <!-- Continuous Data Packets -->
+        <div class="data-packet packet-request"></div>
+        <div class="data-packet packet-request-2"></div>
+        <div class="data-packet packet-response"></div>
+        <div class="data-packet packet-response-2"></div>
+        <div class="data-packet packet-db-query"></div>
+        <div class="data-packet packet-db-result"></div>
+
+        <!-- Flow Labels -->
+        <div class="flow-labels label-request">HTTP Request →</div>
+        <div class="flow-labels label-response">← JSON Response</div>
+        <div class="flow-labels label-db-query">SQL Query →</div>
+        <div class="flow-labels label-db-response">← Data Result</div>
+
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <div class="info-text">Live Software Architecture Communication</div>
+            <button onclick="boostActivity()">🚀 Boost Activity</button>
+            <button onclick="pauseAnimations()">⏸️ Pause</button>
+            <button onclick="resumeAnimations()">▶️ Resume</button>
+        </div>
+    </div>
+
+    <script>
+        let animationsPaused = false;
+        let boostMode = false;
+
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (8 + Math.random() * 4) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        function boostActivity() {
+            if (boostMode) return;
+            
+            boostMode = true;
+            const button = event.target;
+            button.textContent = '🔥 Boosted!';
+            button.style.background = 'linear-gradient(145deg, #ff6b6b, #ee5a52)';
+            
+            // Add more data packets
+            const container = document.querySelector('.container');
+            
+            for (let i = 0; i < 8; i++) {
+                const packet = document.createElement('div');
+                packet.className = 'data-packet';
+                packet.style.background = `hsl(${Math.random() * 360}, 70%, 60%)`;
+                packet.style.left = '240px';
+                packet.style.animation = `slideRight ${0.5 + Math.random()}s ease-in-out infinite ${Math.random() * 2}s`;
+                container.appendChild(packet);
+                
+                const packet2 = document.createElement('div');
+                packet2.className = 'data-packet';
+                packet2.style.background = `hsl(${Math.random() * 360}, 70%, 60%)`;
+                packet2.style.right = '452px';
+                packet2.style.animation = `slideLeft ${0.5 + Math.random()}s ease-in-out infinite ${Math.random() * 2}s`;
+                container.appendChild(packet2);
+            }
+            
+            // Speed up existing animations
+            document.documentElement.style.setProperty('--animation-speed', '0.5s');
+            
+            setTimeout(() => {
+                boostMode = false;
+                button.textContent = '🚀 Boost Activity';
+                button.style.background = 'linear-gradient(145deg, #007bff, #0056b3)';
+                
+                // Remove extra packets
+                const extraPackets = container.querySelectorAll('.data-packet:nth-child(n+9)');
+                extraPackets.forEach(packet => packet.remove());
+            }, 5000);
+        }
+
+        function pauseAnimations() {
+            if (animationsPaused) return;
+            
+            animationsPaused = true;
+            document.body.style.animationPlayState = 'paused';
+            document.querySelectorAll('*').forEach(el => {
+                el.style.animationPlayState = 'paused';
+            });
+        }
+
+        function resumeAnimations() {
+            if (!animationsPaused) return;
+            
+            animationsPaused = false;
+            document.body.style.animationPlayState = 'running';
+            document.querySelectorAll('*').forEach(el => {
+                el.style.animationPlayState = 'running';
+            });
+        }
+
+        // Create random network bursts
+        function createNetworkBurst() {
+            if (animationsPaused) return;
+            
+            const container = document.querySelector('.container');
+            const burstPacket = document.createElement('div');
+            burstPacket.className = 'data-packet';
+            burstPacket.style.background = '#ff00ff';
+            burstPacket.style.left = '240px';
+            burstPacket.style.animation = 'slideRight 0.8s ease-in-out';
+            burstPacket.style.boxShadow = '0 0 20px #ff00ff';
+            
+            container.appendChild(burstPacket);
+            
+            setTimeout(() => {
+                burstPacket.remove();
+            }, 1000);
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            createParticles();
+            
+            // Create random network bursts
+            setInterval(createNetworkBurst, 3000 + Math.random() * 2000);
+        });
+
+        // Add mouse interaction
+        document.addEventListener('mousemove', (e) => {
+            const layers = document.querySelectorAll('.layer');
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            layers.forEach((layer, index) => {
+                const intensity = (mouseX + mouseY) * 10;
+                layer.style.filter = `brightness(${1 + intensity * 0.1}) saturate(${1 + intensity * 0.05})`;
+            });
+        });
+    </script>
+</body>
+</html>
